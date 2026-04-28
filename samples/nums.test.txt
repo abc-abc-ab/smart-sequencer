@@ -1,0 +1,18 @@
+o = {
+	A: 0,
+	Ab: 1,
+	AbC: 2,
+	AbCd: 3,
+	AbCdE: 4,
+	AbCdEf: 5,
+	foo: 6,
+	AbCdEfG: 7,
+	AbCdEfGh: 8,
+	AbCdEfGhI: 9,
+	AbCdEfGhIj: A,
+	nice: B,
+	AbCdEfGhIjK: C,
+	AbCdEfGhIjKl: D,
+	AbCdEfGhIjKlM: E,
+	AbCdEfGhIjKlMn: F,
+}

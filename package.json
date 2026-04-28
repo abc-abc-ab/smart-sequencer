@@ -1,0 +1,67 @@
+{
+	"name": "smart-sequencer",
+	"displayName": "Smart Sequencer",
+	"publisher": "abc-abc-ab",
+	"description": "",
+	"version": "1.0.0",
+	"engines": {
+		"vscode": "^1.116.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "smart-sequencer.helloWorld",
+				"title": "%command.title.helloWorld%"
+			}, {
+				"command": "smart-sequencer.insert",
+				"title": "%command.title.insert%"
+			}, {
+				"command": "smart-sequencer.modification",
+				"title": "%command.title.modification%"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "smart-sequencer.insert",
+					"group": "navigation@1",
+					"when": "editorHasMultipleSelections"
+				}, {
+					"command": "smart-sequencer.modification",
+					"group": "navigation@1",
+					"when": "editorHasSelection"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"lint": "eslint src",
+		"test": "vscode-test"
+	},
+	"devDependencies": {
+		"@types/assert": "^1.5.11",
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^22.19.17",
+		"@types/vscode": "^1.116.0",
+		"@vscode/test-cli": "^0.0.11",
+		"@vscode/test-electron": "^2.5.2",
+		"eslint": "^9.39.3",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.56.1"
+	},
+	"dependencies": {
+		"assert": "^2.1.0"
+	},
+	"rules": {
+		"curly": "off"
+	}
+}
