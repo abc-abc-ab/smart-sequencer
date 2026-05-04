@@ -1,3 +1,5 @@
+/* eslint-disable curly */
+
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -98,13 +100,15 @@ function ModificationNums(): void {
 	};
 
 	const v0 = getVal(matches[0]);
-	const lengthCounts = new Map<number, number>();
+	const lengthCounts = new Map<number, number>(); let isPad = false;
 	matches.forEach(m => {
 		const body = m[4] || m[3];
 		const len = body.toLowerCase().startsWith('0x') ? body.length - 2 : body.length;
 		lengthCounts.set(len, (lengthCounts.get(len) || 0) + 1);
+		isPad ||= body.toLowerCase().startsWith('0x')? (body.toLowerCase().startsWith("0x0") && body.toLowerCase() !== "0x0"): (body.toLowerCase().startsWith("0") && body.toLowerCase() !== "0");
 	});
-	const majorityLength = [...lengthCounts.entries()].reduce((a, b) => b[1] > a[1] ? b : a)[0];
+	const majorityLength0 = [...lengthCounts.entries()].reduce((a, b): [number, number] => b[1] > a[1] ? b : a)[0];
+	const majorityLength = isPad? majorityLength0: 1;
 
 	// --- 2. 数列アルゴリズムの推測 ---
 	let nextVal = (c: number) => c + 1;
