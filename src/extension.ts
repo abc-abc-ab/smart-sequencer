@@ -11,7 +11,11 @@ export function activate(context: vscode.ExtensionContext): void {
 	}), vscode.commands.registerCommand('smart-sequencer.insert', (): void => {
 		InsertNums();
 	}),vscode.commands.registerCommand('smart-sequencer.modification', (): void => {
-		ModificationNums();
+		try {
+			ModificationNums();
+		}catch(e) {
+			vscode.window.showErrorMessage('エラーが発生したよ: ' + (e instanceof Error ? e.message : String(e)));
+		}
 	})];
 	
 	context.subscriptions.push(...disposable);
@@ -79,7 +83,7 @@ function ModificationNums(): void {
 
 	// 正規表現: 引用符のペアを \1 でチェックしつつ、数値/16進数/ビットシフトを網羅
 	// グループ: 1=開始クォート, 2=ビットシフト左辺, 3=ビットシフト右辺, 4=0x付き/大文字16進数/10進数
-	const regex = /([\"\']?)(?:(?:(0x[0-9a-fA-F]+|\d+)\s*<<\s*([0-9a-fA-F]+|\d+))|(0x[0-9a-fA-F]+|[A-F0-9]+|\d+))\1/g;
+	const regex = /\b(?:([\"\']?)(?:(?:(\d+)\s*<<\s*(\d+))|(0x[0-9a-fA-F]+|\d+))\1)\b/g;
 	
 	const matches = Array.from(text.matchAll(regex)).filter(m => {
 		const body = m[4] || m[3]; // 数値本体
@@ -111,11 +115,14 @@ function ModificationNums(): void {
 	const majorityLength = isPad? majorityLength0: 1;
 
 	// --- 2. 数列アルゴリズムの推測 ---
-	let nextVal = (c: number) => c + 1;
-	if (matches.length >= 2) {
+	let nextVal = (c: number): number => c + 1;
+	if (matches.length >= 3) {
+		const [v1, v2] = [getVal(matches[1]), getVal(matches[2])];
+		if ((v0 !== 0 && (v1 / v0 === v2 / v1))) nextVal = (c): number => c * (v2 / v1);
+		else if (v1 - v0 === v2 - v1) nextVal = (c): number => c + (v1 - v0);
+	} else if (matches.length === 2) {
 		const v1 = getVal(matches[1]);
-		if (v0 !== 0 && v1 / v0 === 2) nextVal = (c) => c * 2;
-		else nextVal = (c) => c + (v1 - v0 || 1);
+		nextVal = (c): number => c + (v1 - v0 || 1);
 	}
 
 	// --- 3. 置換実行 ---
